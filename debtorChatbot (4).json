@@ -1,0 +1,584 @@
+{
+  "name": "debtorChatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "id": "b135ce38-f387-40ea-a0e3-e743fa6bb718",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "id": "318aa587-529b-41a6-8c55-e2c8d006fdf7",
+      "name": "Download File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -420,
+        720
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleApi": {
+          "id": "6qhdEsg5lnRbcuKS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "fa00ef92-44fd-4107-916d-f1feab50fa47",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        1160
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "id": "fb49dc05-98fc-4b78-881b-4a182e37a7d7",
+      "name": "Insert into Supabase Vectorstore",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        720
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "A1NptpnnjYLhcb2e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        940
+      ],
+      "id": "71ba64ca-8497-47ff-8150-d215562ecb00",
+      "name": "Embeddings Mistral Cloud1",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "urLDru4DPJu0lVwQ",
+          "name": "Mistral Cloud account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-specdec",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        200
+      ],
+      "id": "b1a8a5a5-396d-444c-afe0-c8368376775c",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "5CGLXzFYRJVIMsX2",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        200
+      ],
+      "id": "173248f2-99f7-4408-88df-4db9744885cd",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "5CGLXzFYRJVIMsX2",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        380
+      ],
+      "id": "b2bc01ef-9d39-4184-a613-b0eaff8428b6",
+      "name": "Embeddings Mistral Cloud2",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "urLDru4DPJu0lVwQ",
+          "name": "Mistral Cloud account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "serviceAccount",
+        "triggerOn": "specificFile",
+        "fileToWatch": {
+          "__rl": true,
+          "value": "1oz7hQB-T8--h9EUB-1qZS7637ByefoeS1_9ZQnD2_WQ",
+          "mode": "list",
+          "cachedResultName": "debtors_records",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oz7hQB-T8--h9EUB-1qZS7637ByefoeS1_9ZQnD2_WQ/edit?usp=drivesdk"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        720
+      ],
+      "id": "50cebe65-36e1-4698-9536-d2bd8b7775d2",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleApi": {
+          "id": "6qhdEsg5lnRbcuKS",
+          "name": "Google Drive account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fd5904b9-ac0f-457e-a589-2fa61fd75762",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "c5b38ce0-2af3-49c1-9971-c1ef70952767",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        720
+      ],
+      "id": "fffafc33-1cea-4fd2-860d-7d1b80de1872",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": "Workflow To insert Debtor Data into Vector store",
+        "height": 720,
+        "width": 1480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1120,
+        580
+      ],
+      "typeVersion": 1,
+      "id": "de25ff8c-52a8-4aaa-b7b7-b5d4b43d7e57",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "AI Agent",
+        "height": 760,
+        "width": 1080,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1000,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "ad15459b-7962-4156-b9a3-f23c84354007",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook').item.json.headers['cf-ray'] }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -660,
+        340
+      ],
+      "id": "c90b36de-22b1-4d88-86be-55c042ed6d4e",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        200
+      ],
+      "id": "a56d4105-909d-459d-9052-22de0b3aa9b5",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "A1NptpnnjYLhcb2e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "n8nchatbot",
+        "description": "retrieve data related debtors records. debtors due dates, status , due amount etc., on the basis of provided ID",
+        "topK": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        100
+      ],
+      "id": "e4db55d0-c7a8-4f1d-8cbc-09e8c387c96b",
+      "name": "Query"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://studio.twilio.com/v2/Flows/FW01649d275263036d53b3a1f2d6747dc3/Executions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "+919392576674"
+            },
+            {
+              "name": "From",
+              "value": "+12526595833"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -940,
+        40
+      ],
+      "id": "ae42bc7a-27d8-4a15-bf6d-bcc0f97ea8f0",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "04dOPkEYoKLDNzGc",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        -120
+      ],
+      "id": "cb76ca71-ea06-4eb8-b9b9-dedf84b4548c",
+      "name": "Webhook",
+      "webhookId": "db30f3fb-2623-4ef5-9ec3-c7f0c6643970"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        -120
+      ],
+      "id": "6b5a5edd-6c6c-4982-9bb1-0495683e55e4",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.body }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "\n\n# **ROLE**  \nYou are a **polite and professional** phone call assistant for **Crowd Wisdom Trading**. Your goal is to **assist debtors with their account inquiries** and **encourage them to make timely payments**.  \n\n---  \n\n# **INSTRUCTIONS**  \n\n- Always use the **\"Query\" tool** to fetch debtor data. **Never assume or make up information.**  \n- **Personalize** responses by addressing the debtor by **name** if an ID is provided.  \n- Keep the conversation **natural and concise**—speak like a **real phone assistant**.  \n- **Do not repeat unnecessary greetings** after the first response.  \n- **Encourage timely payment**:  \n  - Remind them about **due dates**.  \n  - Ask when they can **make the payment**.  \n  - If overdue, politely stress the importance of settling the balance.  \n- **End the conversation smoothly** if the debtor agrees to pay:  \n  **\"Thanks for confirming! Have a nice day.\"**  \n\n---  \n\n### **Handling Missing or Incorrect ID**  \n- If **no ID is provided**, ask for it **only once**:  \n  **\"I’ll need your 4-digit ID to check that. Can you provide it?\"**  \n- If the **ID is incorrect**, say:  \n  **\"I'm unable to find details for this ID. Please check and try again.\"**  \n  ⚠️ **Do not reveal all available IDs.**  \n\n### **Handling Missing Query**  \n- If a **valid ID** is provided but the **query is missing**, respond:  \n  **\"OK, I’ve got your ID. How can I help you?\"**  \n\n### **Conversation Flow (Avoid Repeating Greetings)**  \n- If it's the **first response**, **greet the debtor by name** if the ID is valid.  \n- **For follow-up responses, do NOT repeat greetings**—just answer the query.  \n- **If the debtor confirms payment, end the conversation politely.**  \n\n---\n\n# **OUTPUT STYLE**  \n- Keep responses **short, clear, and professional**.  \n- Speak in a **polite and natural tone**—like a real assistant handling a call.  \n\n---\n\n# **EXAMPLES**  \n\n✅ **Example 1 (Valid ID & Query, First Response)**  \n**User:** `{\"id\": \"1001\", \"query\": \"whats my due amount\"}`  \n**Response:**  \n*\"Hi [Debtor Name], your due amount is $500. When do you plan to make the payment?\"*  \n\n✅ **Example 2 (No ID Provided)**  \n**User:** `{\"id\": \"\", \"query\": \"whats my due amount\"}`  \n**Response:**  \n*\"I’ll need your 4-digit ID to check that. Can you provide it?\"*  \n\n✅ **Example 3 (Valid ID, No Query)**  \n**User:** `{\"id\": \"1002\", \"query\": \"\"}`  \n**Response:**  \n*\"OK, I’ve got your ID. How can I help you?\"*  \n\n✅ **Example 4 (Encouraging Payment, Follow-up Response)**  \n**User:** `{\"id\": \"1002\", \"query\": \"Can I pay next month?\"}`  \n**Response:**  \n*\"Your due date is Feb 20. I recommend settling it on time to avoid penalties. Can you make the payment this week?\"*  \n\n✅ **Example 5 (Follow-up Conversation, No Extra Greeting)**  \n**User:** `{\"id\": \"1001\", \"query\": \"How much is overdue?\"}`  \n**Response:**  \n*\"Your overdue amount is $200. Would you like to clear it today?\"*  \n\n✅ **Example 6 (Debtor Confirms Payment, Ends Conversation)**  \n**User:** `{\"id\": \"1001\", \"query\": \"Yes, I’ll pay today.\"}`  \n**Response:**  \n*\"Thanks for confirming! Have a nice day.\"*  \n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -580,
+        -120
+      ],
+      "id": "74b9e2d7-4a46-40e9-8101-200ee73f1016",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Insert into Supabase Vectorstore",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Insert into Supabase Vectorstore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Mistral Cloud1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insert into Supabase Vectorstore",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Query",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Mistral Cloud2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Query",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "de34a313-a595-46fa-a063-c2f86578881a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "07a81701696da2aa42f256dbcc62016b9b4750ae417ab3a8edc41cf1ced31471"
+  },
+  "id": "zaRcFpm4NLrxm4bD",
+  "tags": []
+}
